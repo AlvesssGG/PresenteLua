@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <style>
+        .custom-player {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #333;
+    padding: 10px;
+    border-radius: 10px;
+    width: fit-content;
+}
+
+button {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: white;
+}
+
+#time {
+    color: white;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+}
+
+input[type="range"] {
+    width: 100px;
+    cursor: pointer;
+}
+
+    </style>
+    <audio id="music" loop>
+        <source id="background-music" src="Music/Stargirl Interlude - The Weeknd.mp3" type="audio/mp3">
+    </audio>
+    
+    <div class="custom-player">
+        <button id="playPause">▶️</button>
+        <span id="time">00:00</span>
+        <input type="range" id="seekbar" min="0" value="0" step="1">
+        <input type="range" id="volume" min="0" max="1" step="0.01" value="0.5">
+    </div>
+    <script>
+        let audio = document.getElementById("music");
+let playPauseBtn = document.getElementById("playPause");
+let timeDisplay = document.getElementById("time");
+let seekBar = document.getElementById("seekbar");
+let volumeControl = document.getElementById("volume");
+
+// Play/Pause
+playPauseBtn.addEventListener("click", () => {
+    if (audio.paused) {
+        audio.play();
+        playPauseBtn.textContent = "⏸️";
+    } else {
+        audio.pause();
+        playPauseBtn.textContent = "▶️";
+    }
+});
+
+// Atualiza tempo
+audio.addEventListener("timeupdate", () => {
+    let minutos = Math.floor(audio.currentTime / 60);
+    let segundos = Math.floor(audio.currentTime % 60);
+    timeDisplay.textContent = `${minutos < 10 ? "0" : ""}${minutos}:${segundos < 10 ? "0" : ""}${segundos}`;
+
+    // Atualiza barra de progresso
+    seekBar.value = audio.currentTime;
+});
+
+// Atualiza barra de progresso ao mudar manualmente
+seekBar.addEventListener("input", () => {
+    audio.currentTime = seekBar.value;
+});
+
+// Configura a duração máxima da barra de progresso
+audio.addEventListener("loadedmetadata", () => {
+    seekBar.max = audio.duration;
+});
+
+// Controle de volume
+volumeControl.addEventListener("input", () => {
+    audio.volume = volumeControl.value;
+});
+
+    </script>
+</body>
+</html>
